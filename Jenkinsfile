@@ -12,7 +12,7 @@ pipeline {
         CURRENT_DIR = ""
         APP_USER = "longle"
         PERM_SCRIPT = "sudo chown -R ${APP_USER}. ${PROJECT_NAME}"
-        KILL_OLD_PROCESS = "sudo kill -9 \$(ps -ef | grep ${PROJECT_NAME} | grep -v grep | aws '{print \$2}') "
+        KILL_OLD_PROCESS = "sudo kill -9 \$(ps -ef | grep ${PROJECT_NAME} | grep -v grep | awk '{print \$2}') "
         DEPLOY_PROJECT = 'sudo su ${APP_USER} -c "cd ${folder_deploy}; chạy lệnh build > nohup.out 2>&1 &"'
     }
 
@@ -50,7 +50,7 @@ pipeline {
             }
             steps {
                 scripts {
-                    sh(script: """ sudo su ${USER_PROJECT} -c "docker rm -f ${CI_PROJECT_NAME}; docker run --name ${CI_PROJECT_NAME} -dp 5214:5214 ${IMAGE_VERSIOn}" """, label: '')
+                    sh(script: """ sudo su ${USER_PROJECT} -c "docker rm -f ${CI_PROJECT_NAME}; docker run --name ${CI_PROJECT_NAME} -dp 5214:5214 ${IMAGE_VERSION}" """, label: '')
                 }
             }
         }
