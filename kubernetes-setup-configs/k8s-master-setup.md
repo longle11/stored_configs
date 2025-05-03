@@ -36,7 +36,7 @@ network:
 
 ### Next step will proceed to install k8s tools and CRI.
 
->  **CAUTION**
+>  &#8505;&#65039; **INFO**
 > **All services on k8s using following ports:**
 > - kube API service: 6443
 > - kubelet: 10250
@@ -54,9 +54,11 @@ br_netfilter
 EOF
 ````
 
+````bash
+sudo modprobe overlay
+sudo modprobe br_netfilter
+````
 
-> **sudo modprobe overlay**
-> **sudo modprobe br_netfilte**
 
 3. Set up brigde network which helps traffic is processed by linux iptables firewall rules and enable port fowarding.
 ````bash
@@ -141,7 +143,10 @@ kubectl get nodes
 ````
 
 
-> ** IMPORTANT:** As soon as all nodes are joined into cluster with master role and they are still in control plane mode and we can't assign pods on them. So we need to run this command on all master nodes to help them can become workers.
+
+
+> 	&#9888;&#65039; **CAUTION** As soon as all nodes are joined into cluster with master role and they are still in control plane mode and we can't assign pods on them. So we need to run this command on all master nodes to help them can become workers.
+
 
 ````bash
 kubectl taint nodes k8s-master-1 node-role.kubernetes.io/control-plane:NoSchedule-
