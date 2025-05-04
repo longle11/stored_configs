@@ -183,7 +183,6 @@ sudo exportfs -ra
 
 #### On another server is used to test
 ````bash
-Cài đặt nfs client
 sudo apt install nfs-common -y
 sudo mkdir -p /data/test
 mount 192.168.195.17:/data/nfs-shared /data/test
