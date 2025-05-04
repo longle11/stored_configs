@@ -23,7 +23,7 @@ network:
   version: 2
   ethernets:
     ens160:
-      dhcp4: yes
+      dhcp4: no
       addresses: [192.168.195.10/24]
       gateway4: 192.168.195.2
       nameservers:

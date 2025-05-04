@@ -1,0 +1,16 @@
+version: '3'
+services:
+  rancher-server:
+    image: rancher/rancher:v2.9.2
+    container_name: rancher-server
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./data/:/var/lib/rancher
+    command:
+      - --no-cacerts
+    environment:
+      - CATTLE_AGENT_TLS_MODE=system-store
+    privileged: true
