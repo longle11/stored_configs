@@ -1,3 +1,15 @@
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm pull ingress-nginx/ingress-nginx
+tar -xzf ingress-nginx-4.11.3.tgz
+vi ingress-nginx/values.yaml
+>> Sửa type: LoadBalancing => type: NodePort
+>> Sửa nodePort http: "" => http: "30080"
+>> Sửa nodePort https: "" => https: "30443"
+# kubectl create ns ingress-nginx
+# helm -n ingress-nginx install ingress-nginx -f ingress-nginx/values.yaml ingress-nginx
+
+
 redis:
   enabled: true
 redis-ha:
