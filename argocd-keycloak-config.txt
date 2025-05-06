@@ -1,0 +1,121 @@
+
+
+Dưới đây là các bước thực hiện thủ công:
+1. Tạo OpenID Client (ArgoCD Client)
+Vào Keycloak Admin Console.
+
+Chọn Realm bạn đang sử dụng (ví dụ: master).
+
+Vào mục Clients > Create.
+
+Cấu hình Client:
+
+Client ID: argocd
+
+Client Protocol: openid-connect
+
+Access Type: confidential
+
+Standard Flow Enabled: ✅
+
+Valid Redirect URIs: http://argocd.kind.cluster/auth/callback
+
+Web Origins: Để trống hoặc cấu hình nếu cần.
+
+Save.
+
+Sau khi tạo xong, đi đến tab Credentials để lấy Client Secret.
+
+2. Tạo Client Scope cho Groups
+Trong Keycloak Admin Console, vào mục Client Scopes.
+
+Chọn Create.
+
+Name: groups
+
+Include in token scope: ✅
+
+Save.
+
+Tiếp theo, vào tab Mappers của client scope mới tạo, chọn Create để thêm một mapper:
+
+Name: groups
+
+Mapper Type: Group Membership
+
+Token Claim Name: groups
+
+Claim JSON Type: String
+
+Full Path: false
+
+Add to ID Token: ✅
+
+Add to Access Token: ✅
+
+Save.
+
+3. Cấu hình Client Default Scopes cho ArgoCD
+Vào Clients > chọn client argocd đã tạo.
+
+Vào tab Client Scopes.
+
+Thêm các default scopes:
+
+profile
+
+email
+
+roles
+
+web-origins
+
+groups (Client Scope vừa tạo).
+
+4. Tạo Groups
+Vào Groups trong Keycloak Admin Console.
+
+Chọn Create Group và tạo các group như argocd-dev, argocd-admin.
+
+5. Tạo Users và Gán Groups
+Vào Users trong Keycloak Admin Console.
+
+Chọn Add user và tạo các user như user-dev, user-admin, user-dev-admin.
+
+Đặt thông tin cho từng user.
+
+Thiết lập mật khẩu (chọn Set password).
+
+Enabled: ✅
+
+Sau khi tạo user, vào Groups trong profile của user đó và gán các group phù hợp:
+
+user-dev gán vào argocd-dev.
+
+user-admin gán vào argocd-admin.
+
+user-dev-admin gán vào cả argocd-dev và argocd-admin.
+
+6. Kết nối ArgoCD với Keycloak
+Sau khi hoàn tất cấu hình Keycloak, bạn cần cấu hình ArgoCD để sử dụng OIDC (Keycloak) cho xác thực.
+
+Chỉnh sửa cấu hình ArgoCD (trong file values.yaml hoặc qua helm):
+
+yaml
+Copy
+Edit
+server:
+  config:
+    oidc.config: |
+      name: Keycloak
+      issuer: http://keycloak.kind.cluster/auth/realms/master
+      clientID: argocd
+      clientSecret: <CLIENT_SECRET>
+      requestedScopes: ['openid', 'profile', 'email', 'groups']
+Client Secret: Sử dụng giá trị Client Secret bạn lấy từ Keycloak khi tạo argocd client.
+
+7. Kiểm tra và Đảm bảo Hoạt Động
+Truy cập vào giao diện ArgoCD và thử đăng nhập qua Keycloak.
+
+Kiểm tra xem nhóm (groups) đã được trả về trong token chưa và ArgoCD có phân quyền đúng không.
+
